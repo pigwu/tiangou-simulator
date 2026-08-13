@@ -19,6 +19,7 @@ class Message:
 SYSTEM_PATTERNS = (
     "撤回了一条消息", "拍了拍", "以上是打招呼的内容", "消息已发出，但被对方拒收",
 )
+TEXT_MESSAGE_TYPES = {"1", "text", "text message", "txt", "文本", "文字"}
 LINE_PATTERNS = (
     re.compile(r"^\[(?P<time>[^\]]+)\]\s*(?P<sender>[^:：]{1,50})[:：]\s*(?P<content>.+)$"),
     re.compile(r"^(?P<sender>[^:：\t]{1,50})[:：\t]\s*(?P<content>.+)$"),
@@ -58,13 +59,18 @@ def parse_csv_bytes(data: bytes) -> list[Message]:
         dialect = csv.excel
     rows = list(csv.DictReader(io.StringIO(text), dialect=dialect))
     aliases = {
-        "sender": ("sender", "name", "speaker", "from", "发送人", "昵称", "说话人"),
-        "content": ("content", "message", "text", "msg", "内容", "消息", "文本"),
+        "sender": ("sender", "name", "speaker", "from", "发送人", "发送者", "昵称", "说话人"),
+        "content": ("content", "message", "text", "msg", "内容", "消息", "消息内容", "文本"),
         "timestamp": ("timestamp", "time", "date", "时间", "日期"),
     }
     result: list[Message] = []
     for row in rows:
         normalized = {str(key).strip().lower(): value for key, value in row.items() if key}
+        type_key = next((name for name in ("type", "message_type", "msgtype", "类型", "消息类型") if name in normalized), None)
+        if type_key:
+            message_type = str(normalized.get(type_key, "")).strip().lower()
+            if message_type and message_type not in TEXT_MESSAGE_TYPES:
+                continue
         values: dict[str, Any] = {}
         for field, names in aliases.items():
             values[field] = next((normalized.get(name.lower()) for name in names if name.lower() in normalized), "")

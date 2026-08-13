@@ -23,15 +23,17 @@ class ModelSpec:
     min_lora_vram_gb: float
     chinese: str
     note: str
+    ollama_adapter_supported: bool
 
 
 MODELS = (
-    ModelSpec("qwen25-15b", "Qwen2.5 1.5B", "Qwen", 1.5, "qwen2.5:1.5b", "Qwen/Qwen2.5-1.5B-Instruct", 1.0, 3.2, 3.0, 6.0, "优秀", "低配电脑和快速试跑"),
-    ModelSpec("qwen25-3b", "Qwen2.5 3B", "Qwen", 3.0, "qwen2.5:3b", "Qwen/Qwen2.5-3B-Instruct", 2.0, 6.2, 5.0, 8.0, "优秀", "默认推荐，质量与速度均衡"),
-    ModelSpec("qwen25-7b", "Qwen2.5 7B", "Qwen", 7.0, "qwen2.5:7b", "Qwen/Qwen2.5-7B-Instruct", 4.7, 15.0, 9.0, 12.0, "优秀", "语气和长上下文更稳定"),
-    ModelSpec("qwen3-8b", "Qwen3 8B", "Qwen", 8.0, "qwen3:8b", "Qwen/Qwen3-8B", 5.2, 16.5, 10.0, 16.0, "优秀", "推理能力更强，可关闭思考输出"),
-    ModelSpec("gemma3-4b", "Gemma 3 4B", "Gemma", 4.0, "gemma3:4b", "google/gemma-3-4b-it", 3.3, 8.5, 6.0, 10.0, "良好", "多语言能力和效率均衡"),
-    ModelSpec("llama32-3b", "Llama 3.2 3B", "Llama", 3.0, "llama3.2:3b", "meta-llama/Llama-3.2-3B-Instruct", 2.0, 6.5, 5.0, 8.0, "一般", "英文经历较多时可选"),
+    ModelSpec("qwen25-15b", "Qwen2.5 1.5B", "Qwen", 1.5, "qwen2.5:1.5b", "Qwen/Qwen2.5-1.5B-Instruct", 1.0, 3.2, 3.0, 6.0, "优秀", "低配电脑和快速试跑", False),
+    ModelSpec("qwen25-3b", "Qwen2.5 3B", "Qwen", 3.0, "qwen2.5:3b", "Qwen/Qwen2.5-3B-Instruct", 2.0, 6.2, 5.0, 8.0, "优秀", "默认推荐，质量与速度均衡", False),
+    ModelSpec("qwen25-7b", "Qwen2.5 7B", "Qwen", 7.0, "qwen2.5:7b", "Qwen/Qwen2.5-7B-Instruct", 4.7, 15.0, 9.0, 12.0, "优秀", "语气和长上下文更稳定", False),
+    ModelSpec("qwen3-8b", "Qwen3 8B", "Qwen", 8.0, "qwen3:8b", "Qwen/Qwen3-8B", 5.2, 16.5, 10.0, 16.0, "优秀", "推理能力更强，可关闭思考输出", False),
+    ModelSpec("gemma3-4b", "Gemma 3 4B", "Gemma", 4.0, "gemma3:4b", "google/gemma-3-4b-it", 3.3, 8.5, 6.0, 10.0, "良好", "多语言能力和效率均衡", False),
+    ModelSpec("llama32-3b", "Llama 3.2 3B", "Llama", 3.0, "llama3.2:3b", "meta-llama/Llama-3.2-3B-Instruct", 2.0, 6.5, 5.0, 8.0, "一般", "英文经历较多时可选", False),
+    ModelSpec("mistral7b-v03", "Mistral 7B Instruct v0.3", "Mistral", 7.0, "mistral:7b-instruct-v0.3-q4_K_M", "mistralai/Mistral-7B-Instruct-v0.3", 4.4, 14.5, 9.0, 12.0, "一般", "Ollama 官方列出的 Safetensors LoRA 直载架构", True),
 )
 
 
@@ -149,7 +151,7 @@ def estimate(model_id: str, method: str, message_count: int, narrative_chars: in
     # 粗略按常见单卡 QLoRA 吞吐校准；给出宽区间而非伪精确的完成时间。
     minutes = max(8.0, tokens / 1000 * spec.params_b * epochs * 0.035 * device_factor)
     compatible = hardware["vram_gb"] >= spec.min_lora_vram_gb
-    return {
+    result = {
         "min_minutes": round(minutes * 0.7),
         "max_minutes": round(minutes * 1.7),
         "disk_gb": round(spec.full_disk_gb * 1.35 + 1.0, 1),
@@ -158,3 +160,7 @@ def estimate(model_id: str, method: str, message_count: int, narrative_chars: in
         "compatible": compatible,
         "basis": f"约 {tokens:,} tokens · {epochs:g} 轮 · {hardware['gpu_name']}",
     }
+    if method == "hybrid":
+        result["disk_gb"] = round(result["disk_gb"] + min(1.5, effective_messages * 0.00008 + 0.02), 1)
+        result["basis"] += " · LoRA 风格训练 + 聊天记忆索引"
+    return result

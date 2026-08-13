@@ -10,6 +10,10 @@ __pycache__/
 .env.local
 .dev-server.log
 .dev-server.err
+local-backend.log
+local-backend-error.log
+local-frontend.log
+local-frontend-error.log
 local_data/
 outputs/
 *.safetensors
