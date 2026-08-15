@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="460" viewBox="0 0 1200 460" role="img" aria-labelledby="title desc">
+  <title id="title">舔狗模拟器本地工作流动画</title>
+  <desc id="desc">聊天记录依次经过本地导入、双方标签、角色塑造，最后进入本地聊天。</desc>
+  <defs>
+    <linearGradient id="backdrop" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0d3b2f"/>
+      <stop offset="1" stop-color="#08251e"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#b8ff3d"/>
+      <stop offset="1" stop-color="#55d6a8"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#001711" flood-opacity=".35"/>
+    </filter>
+    <style>
+      text { font-family: Inter, "Microsoft YaHei", "PingFang SC", system-ui, sans-serif; }
+      .card { fill: #f8f4e9; stroke: #d8d4c8; stroke-width: 1.5; }
+      .number { fill: #f05a25; font-size: 14px; font-weight: 800; letter-spacing: 1px; }
+      .heading { fill: #10241d; font-size: 25px; font-weight: 800; }
+      .caption { fill: #65736d; font-size: 15px; }
+      .label { fill: #0d604a; font-size: 13px; font-weight: 700; letter-spacing: .8px; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="460" rx="28" fill="url(#backdrop)"/>
+  <circle cx="1110" cy="-34" r="190" fill="#17634d" opacity=".24"/>
+  <circle cx="90" cy="482" r="160" fill="#d2ff44" opacity=".07"/>
+  <text x="54" y="58" fill="#b8ff3d" font-size="13" font-weight="800" letter-spacing="3">LOCAL PERSONA PIPELINE</text>
+  <text x="54" y="92" fill="#ffffff" font-size="26" font-weight="800">聊天数据不离开电脑，四步进入新的对话</text>
+
+  <path id="route" d="M 166 345 C 255 395, 316 395, 405 345 S 575 295, 664 345 S 835 395, 924 345" fill="none" stroke="#4d776a" stroke-width="4" stroke-linecap="round" stroke-dasharray="7 12"/>
+  <circle r="8" fill="#b8ff3d">
+    <animateMotion dur="6s" repeatCount="indefinite" rotate="auto">
+      <mpath href="#route"/>
+    </animateMotion>
+    <animate attributeName="r" values="6;10;6" dur="1s" repeatCount="indefinite"/>
+  </circle>
+
+  <g filter="url(#shadow)" transform="translate(50 126)">
+    <rect class="card" width="250" height="190" rx="18"/>
+    <text class="number" x="22" y="32">01</text>
+    <text class="heading" x="22" y="67">本地导入</text>
+    <text class="caption" x="22" y="92">TXT · CSV · TSV · JSON</text>
+    <rect x="22" y="111" width="206" height="52" rx="10" fill="#edf0e8" stroke="#a7b3aa" stroke-dasharray="5 5"/>
+    <path d="M125 122v21m-9-9 9-9 9 9" fill="none" stroke="#0d7658" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <animateTransform attributeName="transform" type="translate" values="0 3;0 -2;0 3" dur="1.4s" repeatCount="indefinite"/>
+    </path>
+    <text class="label" x="80" y="156">只读取文字内容</text>
+  </g>
+
+  <g filter="url(#shadow)" transform="translate(350 126)">
+    <rect class="card" width="250" height="190" rx="18"/>
+    <text class="number" x="22" y="32">02</text>
+    <text class="heading" x="22" y="67">确认双方</text>
+    <text class="caption" x="22" y="92">原始昵称 → 舔狗 / 被舔者</text>
+    <circle cx="62" cy="134" r="24" fill="#f05a25"/>
+    <text x="62" y="141" text-anchor="middle" fill="#fff" font-size="17" font-weight="800">舔</text>
+    <path d="M99 134h48" stroke="#84958e" stroke-width="3" stroke-linecap="round"/>
+    <path d="m141 127 8 7-8 7" fill="none" stroke="#84958e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <animate attributeName="opacity" values=".25;1;.25" dur="1.3s" repeatCount="indefinite"/>
+    </path>
+    <circle cx="188" cy="134" r="24" fill="#0d7658"/>
+    <text x="188" y="141" text-anchor="middle" fill="#fff" font-size="17" font-weight="800">被</text>
+    <text class="label" x="52" y="174">角色方向不会串位</text>
+  </g>
+
+  <g filter="url(#shadow)" transform="translate(650 126)">
+    <rect class="card" width="250" height="190" rx="18"/>
+    <text class="number" x="22" y="32">03</text>
+    <text class="heading" x="22" y="67">塑造角色</text>
+    <text class="caption" x="22" y="92">记忆 · LoRA · 混合模式</text>
+    <rect x="22" y="114" width="206" height="12" rx="6" fill="#dfe4dc"/>
+    <rect x="22" y="114" height="12" rx="6" fill="url(#accent)">
+      <animate attributeName="width" values="18;206;206" keyTimes="0;.75;1" dur="3s" repeatCount="indefinite"/>
+    </rect>
+    <text class="label" x="22" y="154">预计时间 · 磁盘 · 显存</text>
+    <text class="caption" x="22" y="177">按本机配置给出建议</text>
+  </g>
+
+  <g filter="url(#shadow)" transform="translate(950 126)">
+    <rect class="card" width="200" height="190" rx="18"/>
+    <text class="number" x="22" y="32">04</text>
+    <text class="heading" x="22" y="67">开始聊天</text>
+    <text class="caption" x="22" y="92">玩家任选一方</text>
+    <rect x="25" y="110" width="102" height="29" rx="14" fill="#e2e5df">
+      <animate attributeName="opacity" values="0;1;1" keyTimes="0;.2;1" dur="3s" repeatCount="indefinite"/>
+    </rect>
+    <circle cx="42" cy="124" r="4" fill="#718079"/>
+    <circle cx="54" cy="124" r="4" fill="#718079"/>
+    <circle cx="66" cy="124" r="4" fill="#718079"/>
+    <rect x="72" y="148" width="103" height="29" rx="14" fill="#b8ff3d">
+      <animate attributeName="opacity" values="0;0;1;1" keyTimes="0;.38;.58;1" dur="3s" repeatCount="indefinite"/>
+    </rect>
+    <text x="123" y="167" text-anchor="middle" fill="#164a38" font-size="12" font-weight="700">本地回复</text>
+  </g>
+
+  <g transform="translate(54 404)">
+    <circle cx="7" cy="-5" r="7" fill="#b8ff3d"/>
+    <text x="25" y="0" fill="#d9eee7" font-size="14">聊天正文、训练集、头像和适配器默认只保存在本机</text>
+  </g>
+</svg>
